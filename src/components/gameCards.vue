@@ -51,7 +51,7 @@ export default {
                     type: 'is-success'
                 })
                 this.$toast.open({
-                    message: 'You gained 1 point',
+                    message: 'You gained 10 point',
                     type: 'is-success'
                 })
                 this.answered = true

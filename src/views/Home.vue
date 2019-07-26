@@ -67,7 +67,7 @@
                 </b-icon>{{player.name}}
               </li>
             </div>
-            <b-button @click="startGame(room.id)">Start</b-button>
+            <b-button v-if="user.username == room.master" @click="startGame(room.id)">Start</b-button>
           </div>
         </div>
       </div>
@@ -95,6 +95,12 @@ export default {
   },
   data () {
     return {
+      user : {
+        id : localStorage.getItem('userid'),
+        username : localStorage.getItem('username'),
+        room : localStorage.getItem('room')
+
+      },
       roomsHome: [],
       name: null,
       master: null,
@@ -154,7 +160,7 @@ export default {
       })
     },
     startGame(id){
-      if(localStorage.getItem('room')==id){
+      if(localStorage.getItem('room') == id){
         db.collection('rooms').doc(id).update({
         playing : true
       })
