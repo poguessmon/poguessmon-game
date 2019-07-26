@@ -154,10 +154,12 @@ export default {
       })
     },
     startGame(id){
-      db.collection('rooms').doc(id).update({
+      if(localStorage.getItem('room')==id){
+        db.collection('rooms').doc(id).update({
         playing : true
       })
-      this.$router.push('/play')
+        this.$router.push('/play')
+      }
       console.log("bisa main game bareng");
     }
   }
