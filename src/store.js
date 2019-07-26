@@ -45,11 +45,13 @@ export default new Vuex.Store({
           const data = {}
           data.id = doc.id
           data.name = doc.data().name
+          data.pokelist = doc.data().pokelist
           data.players = []
+
           db.collection('rooms')
             .doc(data.id)
             .collection('players')
-            .onSnapshot((dataPlayers) => {
+            .onSnapshot((dataPlayers) => { 
               dataPlayers.forEach(val => {
                 const player = {
                   id: val.id,
