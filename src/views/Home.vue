@@ -1,6 +1,11 @@
 <template>
   <div class="home">
+    <!-- Navbar -->
     <navigationbar></navigationbar>
+    <b-modal :active.sync="isComponentModalActive" has-modal-card>
+      <ModalForm :selected="selected"></ModalForm>
+    </b-modal>
+    <!-- Form Modal -->
     <!-- Header -->
     <div class="columns is-multiline">
       <div class="column is-half room-form" id="create-room">
@@ -22,9 +27,42 @@
       <div class="columns is-multiline room-list">
         <div v-for="room in rooms" :key="room.id" class="column is-4">
           <div class="box">
-            <h1>{{room.name}}</h1>
+            <div class="columns is-multiline">
+              <div class="column is-half">
+                <h1>{{room.name}}</h1>
+              </div>
+              <div class="column is-half">
+                <b-button
+                v-if="room.players.length <=5" 
+                rounded
+                type="is-primary"
+                icon-pack="fas"
+                icon-right="sign-in-alt"
+                style="font-weight:600"
+                @click="isComponentModalActive = true; selected = room.id">
+                Join This Room</b-button>
+                <b-button
+                v-if="room.players.length >= 6" 
+                rounded
+                disabled
+                type="is-primary"
+                icon-pack="fas"
+                icon-right="sign-in-alt"
+                style="font-weight:600">
+                Join This Room</b-button>
+              </div>
+            </div>
+            <p style="text-align: left">Players Count : {{room.players.length}}/6</p>
+            <h3>Players List</h3>
             <div v-for="player in room.players" :key="player.id" class="player-list">
-              <li>{{player.name}}</li>
+              <li>
+                <b-icon
+                pack="fas"
+                icon="user"
+                style="margin-right : 15px;"
+                size="is-small">
+                </b-icon>{{player.name}}
+              </li>
             </div>
           </div>
         </div>
@@ -37,55 +75,28 @@
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
 import navigationbar from '@/components/Nav-Bar.vue'
-import firebase from 'firebase/app'
 import axios from 'axios'
-import 'firebase/firestore'
-
-firebase.initializeApp({
-  apiKey: process.env.VUE_APP_API_KEY,
-  authDomain: 'ollert-fd497.firebaseapp.com',
-  projectId: 'ollert-fd497'
-})
-
-const db = firebase.firestore()
+import ModalForm from '@/components/Form-Player.vue'
+import db from '@/config/firebase.js'
 
 export default {
   created () {
-    db.collection('rooms')
-      .onSnapshot((querySnapshot) => {
-        let rooms = [] 
-        querySnapshot.forEach(doc => {
-          const data = {}
-          data.id = doc.id
-          data.name = doc.data().name
-          data.players = []
-          db.collection('rooms')
-            .doc(data.id)
-            .collection('players')
-            .onSnapshot((dataPlayers) => {
-              dataPlayers.forEach(val => {
-                const player = {
-                  id: val.id,
-                  ...val.data()
-                }
-                data.players.push(player)
-              })
-            })
-          rooms.push(data)
-        })        
-        // if (store.state.rooms.length === 0) {}
-
-        this.$store.commit('receiveroom', rooms)
-      })
+    console.log(this.$store.state.rooms);
+    
+    this.$store.dispatch('fetchRooms')
   },
   name: 'home',
   components: {
     HelloWorld,
-    navigationbar
+    navigationbar,
+    ModalForm,
   },
   data () {
     return {
-      name: null
+      roomsHome: [],
+      name: null,
+      isComponentModalActive: false,
+      selected: null,
     }
   },
   computed: {
@@ -123,10 +134,11 @@ export default {
         console.log(poke, 'Ini Data');
         db.collection('rooms').add({
           name: this.name,
-          players: [],
           pokelist: poke
         })
         .then((data) => {
+          console.log(data);
+          
           console.log('Document successfully written!', data.id)
         })
       })
@@ -147,5 +159,23 @@ export default {
 
 .room-list {
   padding: 5vh 5vw;
+}
+
+.box h1 {
+  text-align: start;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.box h3 {
+  text-align: start;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+
+.box li {
+  list-style-type: none;
+  text-align: start
 }
 </style>
