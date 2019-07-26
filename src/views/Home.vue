@@ -81,6 +81,8 @@ import db from '@/config/firebase.js'
 
 export default {
   created () {
+    console.log(this.$store.state.rooms);
+    
     this.$store.dispatch('fetchRooms')
   },
   name: 'home',
@@ -132,10 +134,11 @@ export default {
         console.log(poke, 'Ini Data');
         db.collection('rooms').add({
           name: this.name,
-          players: [],
           pokelist: poke
         })
         .then((data) => {
+          console.log(data);
+          
           console.log('Document successfully written!', data.id)
         })
       })
