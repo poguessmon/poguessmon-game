@@ -30,7 +30,7 @@ export default new Router({
     {
       path: '/play',
       name : 'play',
-      component: () => import('./views/PlayRoom.vue')
+      component: () => import('./components/gameSpace.vue')
     }
   ]
 })

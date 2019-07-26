@@ -55,6 +55,8 @@ export default {
                     type: 'is-success'
                 })
                 this.answered = true
+                this.revealed = true
+                this.wait = true  
                 let roomId= localStorage.getItem('room')
                 let userId = loaclStorage.getItem('userid')
                 // let roomId = this.$store.state.rooms[0].id

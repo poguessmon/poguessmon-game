@@ -195,7 +195,7 @@ export default {
 
                 // let roomId = this.$store.state.rooms[0].id
                 // console.log(this.$store.state.rooms[0].players,"<<<<<<<<<")
-            let roomId= localStorage.getItem('roomId')
+            let roomId= localStorage.getItem('room')
             this.$store.state.rooms.forEach(element => {
                 if(element.id == roomId){
                     this.pokemonList = element.pokelist
