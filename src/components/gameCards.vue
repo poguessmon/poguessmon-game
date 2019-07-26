@@ -3,10 +3,17 @@
     <div id="card" class="card" style="display: inline-block">
         <div class="card-image">
             <div v-if="!revealed">
+<<<<<<< HEAD
             <img  style="filter: contrast(0%) brightness(0%)" :src="picture" alt="pokemon" height="400" width="400 ">                   
             </div>
             <div v-if="revealed">
             <img :src="picture" alt="pokemon" height="400" width="400 ">
+=======
+            <img  style="filter: contrast(0%) brightness(0%)" :src="img" alt="pokemon" height="400" width="400 ">                   
+            </div>
+            <div v-if="revealed">
+            <img :src="img" alt="pokemon" height="400" width="400 ">
+>>>>>>> gamespace
             <figcaption>It's {{name}}!</figcaption>
             </div>            
             
@@ -29,7 +36,11 @@
 
 <script>
 export default {
+<<<<<<< HEAD
     props:['name','picture','index', 'finalRound','stage', 'currentRound'],
+=======
+    props:['name','img','index', 'finalRound','stage', 'currentRound'],
+>>>>>>> gamespace
     data(){
         return{
             answer: "",
@@ -76,13 +87,29 @@ export default {
                   
             
             }
+<<<<<<< HEAD
+=======
+    },
+    watch:{
+        currentRound (newVal, OldVal){
+            console.log("stage" , this.stage)            
+            if(newVal == this.stage){
+                
+                                     
+            }
+        }
+>>>>>>> gamespace
     }
 }
 </script>
 
 <style scoped>
 #card{
+<<<<<<< HEAD
     background-image: url("../assets/bg.png");
+=======
+    background-image: url("@/assets/bg.png");
+>>>>>>> gamespace
     background-repeat: no-repeat;
 }
 </style>
