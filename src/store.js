@@ -19,6 +19,28 @@ export default new Vuex.Store({
   },
   actions: {
     insertPlayer({ commit, dispatch, state }, payload) {
+      
+      commit('clearRoom')
+      db.collection('rooms')
+        .doc(payload.roomid)
+        .collection('players')
+        .add({
+          name: payload.name,
+          points: 10
+        })
+      .then((dataCreated) => {
+        // localStorage.setItem('room', payload.roomid)
+        localStorage.setItem('username', payload.name)
+        localStorage.setItem('userid', dataCreated.id)
+        dispatch('fetchRooms')
+      })
+      .catch((err) => {
+        alert(err)
+        console.log(err);
+      })
+
+    },
+    setMaster({ commit, dispatch, state}, payload) {
       commit('clearRoom')
       db.collection('rooms')
         .doc(payload.roomid)
@@ -29,6 +51,14 @@ export default new Vuex.Store({
         })
       .then((dataCreated) => {
         dispatch('fetchRooms')
+        localStorage.setItem('room', payload.roomid)
+        localStorage.setItem('username', payload.name)
+        localStorage.setItem('userid', dataCreated.id)
+        db.collection('rooms')
+          .doc(payload.roomid)
+          .update({
+            master : payload.name
+          })
       })
       .catch((err) => {
         alert(err)
@@ -47,7 +77,6 @@ export default new Vuex.Store({
           data.name = doc.data().name
           data.pokelist = doc.data().pokelist
           data.players = []
-
           db.collection('rooms')
             .doc(data.id)
             .collection('players')
