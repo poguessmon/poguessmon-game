@@ -8,6 +8,9 @@
         <b-field label="Room Name">
           <b-input v-model="name" placeholder="Room Name"></b-input>
         </b-field>
+        <b-field label="Room Master">
+          <b-input v-model="master" placeholder="Room Master"></b-input>
+        </b-field>
         <b-button
           type="is-primary"
           @click.prevent="createRoom"
@@ -26,6 +29,7 @@
             <div v-for="player in room.players" :key="player.id" class="player-list">
               <li>{{player.name}}</li>
             </div>
+            <b-button @click="startGame(room.id)">Start</b-button>
           </div>
         </div>
       </div>
@@ -51,32 +55,9 @@ const db = firebase.firestore()
 
 export default {
   created () {
-    db.collection('rooms')
-      .onSnapshot((querySnapshot) => {
-        let rooms = [] 
-        querySnapshot.forEach(doc => {
-          const data = {}
-          data.id = doc.id
-          data.name = doc.data().name
-          data.players = []
-          db.collection('rooms')
-            .doc(data.id)
-            .collection('players')
-            .onSnapshot((dataPlayers) => {
-              dataPlayers.forEach(val => {
-                const player = {
-                  id: val.id,
-                  ...val.data()
-                }
-                data.players.push(player)
-              })
-            })
-          rooms.push(data)
-        })        
-        // if (store.state.rooms.length === 0) {}
+    console.log(this.$store.state.rooms);
+    this.$store.dispatch('fetchRooms')
 
-        this.$store.commit('receiveroom', rooms)
-      })
   },
   name: 'home',
   components: {
@@ -85,7 +66,11 @@ export default {
   },
   data () {
     return {
-      name: null
+      roomsHome: [],
+      name: null,
+      master: null,
+      isComponentModalActive: false,
+      selected: null
     }
   },
   computed: {
@@ -123,16 +108,30 @@ export default {
         console.log(poke, 'Ini Data');
         db.collection('rooms').add({
           name: this.name,
-          players: [],
-          pokelist: poke
+          playing:false,
+          pokelist: poke,
+          master: null
         })
         .then((data) => {
+          const payload = {
+            roomid : data.id,
+            name : this.master
+          }
+          this.$store.dispatch('setMaster', payload)
+
           console.log('Document successfully written!', data.id)
         })
       })
       .catch((err) => {
         console.log(err);
       })
+    },
+    startGame(id){
+      db.collection('rooms').doc(id).update({
+        playing : true
+      })
+      this.$router.push('/play')
+      console.log("bisa main game bareng");
     }
   }
 }
