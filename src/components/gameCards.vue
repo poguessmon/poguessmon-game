@@ -28,8 +28,10 @@
 </template>
 
 <script>
+import db from '@/config/firebase.js'
+import firebase from 'firebase/app'
 export default {
-    props:['name','img','index', 'finalRound','stage', 'currentRound'],
+    props:['name','picture','index', 'finalRound','stage', 'currentRound'],
     data(){
         return{
             answer: "",
@@ -55,10 +57,12 @@ export default {
                 this.answered = true
                 let roomId= localStorage.getItem('room')
                 let userId = loaclStorage.getItem('userid')
-                // const ref = db.collection('Rooms').doc(roomId).collection('players').doc(userId)
-                // const increased = firebase.firestore.FieldValue.increment(1)
+                // let roomId = this.$store.state.rooms[0].id
+                // let userId = "Z35bkE7x7Qcbfys16Ti4"
+                const ref = db.collection('rooms').doc(roomId).collection('players').doc(userId)
+                const increased = firebase.firestore.FieldValue.increment(10)
 
-                // ref.update({score : increased})
+                ref.update({points : increased})
                 this.$emit('correct')
             }else{
                 this.$toast.open({

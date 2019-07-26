@@ -24,7 +24,8 @@ export default {
         }
     },
     created(){
-        let roomId= localStorage.getItem('room')
+        let roomId= localStorage.getItem('room') 
+        // let roomId = this.$store.state.rooms[0].id
         this.$store.state.rooms.forEach(element => {
             if(element.id == roomId){
                 this.players = element.players
