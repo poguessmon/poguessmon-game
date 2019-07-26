@@ -19,7 +19,6 @@ export default new Vuex.Store({
   },
   actions: {
     insertPlayer({ commit, dispatch, state }, payload) {
-      
       commit('clearRoom')
       db.collection('rooms')
         .doc(payload.roomid)
@@ -29,10 +28,10 @@ export default new Vuex.Store({
           points: 10
         })
       .then((dataCreated) => {
-        // localStorage.setItem('room', payload.roomid)
+        dispatch('fetchRooms')
+        localStorage.setItem('room', payload.roomid)
         localStorage.setItem('username', payload.name)
         localStorage.setItem('userid', dataCreated.id)
-        dispatch('fetchRooms')
       })
       .catch((err) => {
         alert(err)
