@@ -13,6 +13,9 @@
         <b-field label="Room Name">
           <b-input v-model="name" placeholder="Room Name"></b-input>
         </b-field>
+        <b-field label="Room Master">
+          <b-input v-model="master" placeholder="Room Master"></b-input>
+        </b-field>
         <b-button
           type="is-primary"
           @click.prevent="createRoom"
@@ -64,6 +67,7 @@
                 </b-icon>{{player.name}}
               </li>
             </div>
+            <b-button @click="startGame(room.id)">Start</b-button>
           </div>
         </div>
       </div>
@@ -82,7 +86,6 @@ import db from '@/config/firebase.js'
 export default {
   created () {
     console.log(this.$store.state.rooms);
-    
     this.$store.dispatch('fetchRooms')
   },
   name: 'home',
@@ -95,8 +98,9 @@ export default {
     return {
       roomsHome: [],
       name: null,
+      master: null,
       isComponentModalActive: false,
-      selected: null,
+      selected: null
     }
   },
   computed: {
@@ -134,17 +138,29 @@ export default {
         console.log(poke, 'Ini Data');
         db.collection('rooms').add({
           name: this.name,
-          pokelist: poke
+          playing:false,
+          pokelist: poke,
+          master: null
         })
         .then((data) => {
-          console.log(data);
-          
+          const payload = {
+            roomid : data.id,
+            name : this.master
+          }
+          this.$store.dispatch('setMaster', payload)
           console.log('Document successfully written!', data.id)
         })
       })
       .catch((err) => {
         console.log(err);
       })
+    },
+    startGame(id){
+      db.collection('rooms').doc(id).update({
+        playing : true
+      })
+      this.$router.push('/play')
+      console.log("bisa main game bareng");
     }
   }
 }
