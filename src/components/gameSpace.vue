@@ -229,7 +229,7 @@ export default {
                     this.showResult()
                 }
                         
-            }, 5000); 
+            }, 15000); 
         }
     }
 }
