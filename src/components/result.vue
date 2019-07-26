@@ -6,8 +6,7 @@
         <p class="title">The game has ended, this is the result</p>
         <div class="content">
             <h3 v-for="(player,index) in players" v-bind:key="index" style="color:white">
-                Name: {{ player.name }}
-                
+                Name: {{ player.name }}                
                 Score: {{ player.points}}
             </h3>
           
@@ -25,7 +24,7 @@ export default {
         }
     },
     created(){
-        let roomId= localStorage.getItem(roomId)
+        let roomId= localStorage.getItem('room')
         this.$store.state.rooms.forEach(element => {
             if(element.id == roomId){
                 this.players = element.players

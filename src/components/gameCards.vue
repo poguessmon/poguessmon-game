@@ -53,7 +53,9 @@ export default {
                     type: 'is-success'
                 })
                 this.answered = true
-                // const ref = db.collection('Rooms').doc('roomId').collection('players').doc('playerId')
+                let roomId= localStorage.getItem('room')
+                let userId = loaclStorage.getItem('userid')
+                // const ref = db.collection('Rooms').doc(roomId).collection('players').doc(userId)
                 // const increased = firebase.firestore.FieldValue.increment(1)
 
                 // ref.update({score : increased})

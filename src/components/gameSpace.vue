@@ -112,7 +112,7 @@
 </template>
 
 <script>
-
+import db from '@/config/firebase.js'
 import card from '@/components/gameCards'
 import resultField from '@/components/result'
 
@@ -194,7 +194,7 @@ export default {
         // this.pokemonList = dummyPokemons
         // this.pokemonList = this.$store.state.rooms
 
-            let roomId= localStorage.getItem(roomId)
+            let roomId= localStorage.getItem('roomId')
             this.$store.state.rooms.forEach(element => {
                 if(element.id == roomId){
                     this.pokemonList = element.pokelist
@@ -228,7 +228,7 @@ export default {
                     this.showResult()
                 }
                         
-            }, 1000); 
+            }, 15000); 
         }
     }
 }
