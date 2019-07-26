@@ -3,10 +3,10 @@
     <div id="card" class="card" style="display: inline-block">
         <div class="card-image">
             <div v-if="!revealed">
-            <img  style="filter: contrast(0%) brightness(0%)" :src="img" alt="pokemon" height="400" width="400 ">                   
+            <img  style="filter: contrast(0%) brightness(0%)" :src="picture" alt="pokemon" height="400" width="400 ">                   
             </div>
             <div v-if="revealed">
-            <img :src="img" alt="pokemon" height="400" width="400 ">
+            <img :src="picture" alt="pokemon" height="400" width="400 ">
             <figcaption>It's {{name}}!</figcaption>
             </div>            
             
@@ -29,7 +29,7 @@
 
 <script>
 export default {
-    props:['name','img','index', 'finalRound','stage', 'currentRound'],
+    props:['name','picture','index', 'finalRound','stage', 'currentRound'],
     data(){
         return{
             answer: "",
@@ -76,22 +76,13 @@ export default {
                   
             
             }
-    },
-    watch:{
-        currentRound (newVal, OldVal){
-            console.log("stage" , this.stage)            
-            if(newVal == this.stage){
-                
-                                     
-            }
-        }
     }
 }
 </script>
 
 <style scoped>
 #card{
-    background-image: url("@/assets/bg.png");
+    background-image: url("../assets/bg.png");
     background-repeat: no-repeat;
 }
 </style>
