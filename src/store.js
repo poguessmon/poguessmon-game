@@ -11,11 +11,19 @@ export default new Vuex.Store({
   },
   mutations: {
     receiveroom (statename, payload) {
-      this.state.rooms = payload
+      statename.rooms = payload
     },
     clearRoom(statename) {
       statename.rooms = []
     },
+    setRooms(state, payload){
+      state.rooms = payload
+    },
+    updatePlayer(state, payload){
+       let room = state.rooms.find(obj => obj.id === payload.id)
+       room.players = payload.players
+      
+    }
   },
   actions: {
     insertPlayer({ commit, dispatch, state }, payload) {
@@ -66,12 +74,14 @@ export default new Vuex.Store({
 
     },
     fetchRooms({ commit, state }) {
-      commit('clearRoom')
       db.collection('rooms')
       .onSnapshot((querySnapshot) => {
+        //commit('clearRoom')
         let roomsLobby = [] 
         querySnapshot.forEach(doc => {
+          console.log("ketriger gak")
           const data = {}
+          let fromRooms = true
           data.id = doc.id
           data.name = doc.data().name
           data.pokelist = doc.data().pokelist
@@ -79,18 +89,52 @@ export default new Vuex.Store({
           db.collection('rooms')
             .doc(data.id)
             .collection('players')
-            .onSnapshot((dataPlayers) => { 
-              dataPlayers.forEach(val => {
+            // .onSnapshot((dataPlayers) => { 
+            //   dataPlayers.forEach(val => {
+            //     const player = {
+            //       id: val.id,
+            //       ...val.data()
+            //     }
+            //     data.players.push(player)
+            //   })
+            // })
+            .onSnapshot(
+            (dataPlayers)=>{
+              console.log( data,"ini data player")
+              console.log(data.id, "ini data.id")
+                // let id = dataCreated.getRef().id
+                // alert(id)
+                let players = []
+                let updatedRoom = state.rooms.find(obj => obj.id === data.id)
+                console.log(updatedRoom, "updatedRoomnya")
+
+                updatedRoom.players = []
+                console.log(updatedRoom, "updatedRoomnya seteleah di kosongin")
+
+                dataPlayers.forEach(val => {
                 const player = {
                   id: val.id,
                   ...val.data()
                 }
-                data.players.push(player)
+                players.push(player)
               })
+              updatedRoom.players = players
+              console.log(updatedRoom, "updatedRoomnya seteleah di players")
+              // if(!fromRooms){
+              //   let payload = {
+              //     id : id,
+              //     players : dataPlayers
+              //   }
+              //   commit('updatePlayer', )
+              // }else{
+
+              // }
+      
             })
           roomsLobby.push(data)
         })
-        state.rooms = roomsLobby      
+        //state.rooms = roomsLobby 
+        commit('setRooms', roomsLobby)     
       })
     }
   }
